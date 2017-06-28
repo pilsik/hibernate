@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
 /**
  * Created by Админ on 28.06.2017.
  */
-
+@PropertySource("classpath:dao-test.properties")
 @TestExecutionListeners(DbUnitTestExecutionListener.class)
 @SpringBootTest(classes = OrmJhelperApplication.class)
 @DirtiesContext

@@ -3,15 +3,49 @@ package by.sivko.model;
 import javax.persistence.*;
 import java.io.Serializable;
 
-/**
- * Created by Админ on 28.06.2017.
- */
+/*
+https://stackoverflow.com/questions/3765948/how-do-i-query-for-only-superclass-entities-in-a-jpql-query
+only entities superclass
+-----------------------------------------------
+entity_type_expression ::=
+        type_discriminator |
+        entity_type_literal |
+        input_parameter
+        type_discriminator ::=
+        TYPE(identification_variable |
+        single_valued_object_path_expression |
+        input_parameter )
+-----------------------------------------------
+SELECT e
+        FROM Employee e
+        WHERE TYPE(e) IN (Exempt, Contractor)
+
+        SELECT e
+        FROM Employee e
+        WHERE TYPE(e) IN (:empType1, :empType2)
+
+        SELECT e
+        FROM Employee e
+        WHERE TYPE(e) IN :empTypes
+
+        SELECT TYPE(e)
+        FROM Employee e
+        WHERE TYPE(e) <> Exempt
+------------------------------------------------
+*/
+
 @Entity
 @Table(name = "users")
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
+@DiscriminatorValue("User")
+@NamedQueries({
+        @NamedQuery(name = "User.findByName", query = "select u from User u where u.name=:name and TYPE(u) <> Employer"),
+        @NamedQuery(name = "User.getAllUsers", query = "select u from User u where TYPE(u) <> Employer")
+})
 public class User implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.TABLE) // GenerationType.TABLE Table-per-class
     private Long id;
 
     private String name;

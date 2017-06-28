@@ -1,18 +1,19 @@
 package by.sivko.dao;
 
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 
-import javax.annotation.Resource;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-public class GenericDaoImpl<T, PK extends Serializable> implements GenericDao<T, PK> {
+@Transactional
+public abstract class GenericDaoImpl<T, PK extends Serializable> implements GenericDao<T, PK> {
 
-    @Autowired
+    @PersistenceContext
     EntityManager entityManager;
 
     protected Class<T> entityClass;
@@ -48,7 +49,5 @@ public class GenericDaoImpl<T, PK extends Serializable> implements GenericDao<T,
     }
 
     @Override
-    public List<T> getList() {
-        return this.entityManager.createQuery("SELECT u FROM User u", entityClass).getResultList();
-    }
+    abstract public List<T> getList();
 }
