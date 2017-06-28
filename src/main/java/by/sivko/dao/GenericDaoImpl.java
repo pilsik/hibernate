@@ -49,6 +49,6 @@ public class GenericDaoImpl<T, PK extends Serializable> implements GenericDao<T,
 
     @Override
     public List<T> getList() {
-        return this.entityManager.createQuery("SELECT u FROM User u",entityClass).getResultList();
+        return this.entityManager.createQuery("SELECT u FROM User u", entityClass).getResultList();
     }
 }
